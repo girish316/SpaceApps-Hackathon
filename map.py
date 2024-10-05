@@ -13,8 +13,20 @@ def create_map():
         control=True
     ).add_to(m)
 
+    # Add an ArcGIS Topographic layer
+    folium.TileLayer(
+        tiles="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri",
+        name="ArcGIS Topographic",
+        overlay=True,
+        control=True
+    ).add_to(m)
+
     # Add marker for Calgary
     folium.Marker([51.0447, -114.0719], popup="Calgary").add_to(m)
+
+    # Enable LayerControl to toggle between different layers
+    folium.LayerControl().add_to(m)
 
     # Save the map as an HTML file
     m.save('templates/map.html')

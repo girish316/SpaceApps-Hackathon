@@ -25,7 +25,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_6c7a6f9470da32b04c2c0ef39414cfe6 {
+                #map_7d3d56ab64f154a00151ef2d4b6e6852 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -39,14 +39,14 @@
 <body>
     
     
-            <div class="folium-map" id="map_6c7a6f9470da32b04c2c0ef39414cfe6" ></div>
+            <div class="folium-map" id="map_7d3d56ab64f154a00151ef2d4b6e6852" ></div>
         
 </body>
 <script>
     
     
-            var map_6c7a6f9470da32b04c2c0ef39414cfe6 = L.map(
-                "map_6c7a6f9470da32b04c2c0ef39414cfe6",
+            var map_7d3d56ab64f154a00151ef2d4b6e6852 = L.map(
+                "map_7d3d56ab64f154a00151ef2d4b6e6852",
                 {
                     center: [51.0447, -114.0719],
                     crs: L.CRS.EPSG3857,
@@ -60,43 +60,69 @@
 
         
     
-            var tile_layer_5037b678bac389fb7a446131a22f1981 = L.tileLayer(
+            var tile_layer_cf129aed3613c516463e4d179c017656 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
             );
         
     
-            tile_layer_5037b678bac389fb7a446131a22f1981.addTo(map_6c7a6f9470da32b04c2c0ef39414cfe6);
+            tile_layer_cf129aed3613c516463e4d179c017656.addTo(map_7d3d56ab64f154a00151ef2d4b6e6852);
         
     
-            var tile_layer_5e51296f32762a9962d52946ad581278 = L.tileLayer(
+            var tile_layer_ff51eb55903acbc55e2c069a6cc2f779 = L.tileLayer(
                 "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {"attribution": "Esri", "detectRetina": false, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
             );
         
     
-            tile_layer_5e51296f32762a9962d52946ad581278.addTo(map_6c7a6f9470da32b04c2c0ef39414cfe6);
+            tile_layer_ff51eb55903acbc55e2c069a6cc2f779.addTo(map_7d3d56ab64f154a00151ef2d4b6e6852);
         
     
-            var marker_7e5c0876ee7dc97295a80f95d712cce6 = L.marker(
+            var tile_layer_6b0a447d5624056e7d7936b8d770bf58 = L.tileLayer(
+                "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+                {"attribution": "Esri", "detectRetina": false, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_6b0a447d5624056e7d7936b8d770bf58.addTo(map_7d3d56ab64f154a00151ef2d4b6e6852);
+        
+    
+            var marker_19d5352e4b426c9381d5ee0a4d0c5501 = L.marker(
                 [51.0447, -114.0719],
                 {}
-            ).addTo(map_6c7a6f9470da32b04c2c0ef39414cfe6);
+            ).addTo(map_7d3d56ab64f154a00151ef2d4b6e6852);
         
     
-        var popup_67f492a281ac32bc85cad49ccf963983 = L.popup({"maxWidth": "100%"});
+        var popup_ef9455e28eaa12c32debb010d5ac83db = L.popup({"maxWidth": "100%"});
 
         
             
-                var html_be1611d4706099244677eed07a876db1 = $(`<div id="html_be1611d4706099244677eed07a876db1" style="width: 100.0%; height: 100.0%;">Calgary</div>`)[0];
-                popup_67f492a281ac32bc85cad49ccf963983.setContent(html_be1611d4706099244677eed07a876db1);
+                var html_c1da7b31d2f8a56bd4ddf490ed66e929 = $(`<div id="html_c1da7b31d2f8a56bd4ddf490ed66e929" style="width: 100.0%; height: 100.0%;">Calgary</div>`)[0];
+                popup_ef9455e28eaa12c32debb010d5ac83db.setContent(html_c1da7b31d2f8a56bd4ddf490ed66e929);
             
         
 
-        marker_7e5c0876ee7dc97295a80f95d712cce6.bindPopup(popup_67f492a281ac32bc85cad49ccf963983)
+        marker_19d5352e4b426c9381d5ee0a4d0c5501.bindPopup(popup_ef9455e28eaa12c32debb010d5ac83db)
         ;
 
         
     
+    
+            var layer_control_3b6fbaec8f138f244168f0c1d5fb6b2b_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_cf129aed3613c516463e4d179c017656,
+                },
+                overlays :  {
+                    "ArcGIS Satellite Imagery" : tile_layer_ff51eb55903acbc55e2c069a6cc2f779,
+                    "ArcGIS Topographic" : tile_layer_6b0a447d5624056e7d7936b8d770bf58,
+                },
+            };
+            let layer_control_3b6fbaec8f138f244168f0c1d5fb6b2b = L.control.layers(
+                layer_control_3b6fbaec8f138f244168f0c1d5fb6b2b_layers.base_layers,
+                layer_control_3b6fbaec8f138f244168f0c1d5fb6b2b_layers.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_7d3d56ab64f154a00151ef2d4b6e6852);
+
+        
 </script>
 </html>
