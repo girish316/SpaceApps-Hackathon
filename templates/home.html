@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calgary Community Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Welcome to Calgary Community Insights</h1>
+            <p>Explore the geographical, environmental, and community challenges of Calgary.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='calgary.jpg') }}" alt="Calgary Landscape">
+        </div>
+        <div class="button-container">
+            <a href="/map" class="btn">Explore the Map</a>
+        </div>
+    </main>
+</body>
+</html>
