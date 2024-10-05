@@ -3,4 +3,8 @@ folium
 geopandas
 plotly
 pandas
+<<<<<<< HEAD
 bs4
+=======
+shapely
+>>>>>>> newBranch

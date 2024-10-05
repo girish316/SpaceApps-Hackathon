@@ -3,7 +3,7 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #F1F1F1;
     color: #333;
 }
 
@@ -12,6 +12,19 @@ header {
     color: #fff;
     text-align: center;
     padding: 20px;
+}
+
+/* Main Flexbox Layout */
+main {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Space out the items */
+    padding: 20px; /* Add padding for better spacing */
+
+    gap: 5%;
+
+    padding-top: 2.5%;
 }
 
 h1 {
@@ -23,17 +36,26 @@ p {
     font-size: 1.2em;
 }
 
+.title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: black;
+    width: fit-content;
+}
+
 /* Image Styling */
 .image-container {
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     margin: 20px 0;
+    z-index: 1;
+
+    max-width: 50%;
 }
 
 .image-container img {
-    width: 80%;
+    width: 100%; /* Adjust to occupy full container width */
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Button Styling */
@@ -44,16 +66,51 @@ p {
 }
 
 .btn {
-    background-color: #25587a;
+    background: linear-gradient(to right, #435CC2, #37C8DD);
+
     color: white;
     padding: 15px 30px;
     text-decoration: none;
     font-size: 1.2em;
-    border-radius: 5px;
+    border-radius: 25px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    text-wrap: nowrap;
 }
 
 .btn:hover {
-    background-color: #3e8db9;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.navBar button{
+    border-radius: 25px;
+    font-size: 1.1em;
+    padding: 8px 17px;
+
+    border: none;
+    background-color: none;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+
+    padding-bottom: 10px;
+
+    background-image: linear-gradient(to right, black 50%, transparent 50%);
+    background-size: 300% 100%; /* Double the width for the fill effect */
+    background-position: right bottom; /* Start position of the background */
+    transition: background-position 0.5s ease, color 0.5s ease;
+
+    &:hover {
+        background-position: left bottom; /* Move background to left on hover */
+        color: white; /* Change text color on hover */
+    }
+}
+
+.navBar{
+    padding: 10px;
+    display: flex; 
+    gap: 20px;
 }
