@@ -1,12 +1,11 @@
 from flask import Flask, render_template
 from map import create_map
-import folium
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Welcome to the Calgary Community Insights!"
+    return render_template('home.html')
 
 @app.route('/map')
 def show_map():
