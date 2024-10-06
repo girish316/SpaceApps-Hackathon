@@ -8,10 +8,111 @@
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon"> 
     <link rel="icon" href="/static/hack.svg" type="image/svg+xml"> 
 
+    <style>
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-left: 3vh solid transparent;
+            border-right: 3vh solid transparent;
+            border-top: 5vh solid rgba(0, 0, 0, 0.356); 
+            transform: rotateX(180deg);
+            animation: moveUpDown 4s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+
+            position: absolute;
+            top: 94vh;
+        }
+        @keyframes moveUpDown {
+            0%, 100% {transform: translateY(0);}
+            25%, 75% {transform: translateY(-10vh);}
+        }
+
+    </style>
 
 </head>
 <body>
     <div id="app"></div> <!-- Navbar and content will be injected here -->
+
+    <section id="introduction" class="flex flex-wrap items-center w-full">
+        <!-- Image on the left covering 50% of the screen -->
+        <div class="w-full md:w-7/12 p-16 ">
+            <img src="{{ url_for('static', filename='5324.jpg') }}" alt="Introduction Image" class="object-cover w-full rounded-lg">
+        </div>
+    
+        <!-- Text on the right -->
+        <div class="w-full md:w-5/12 p-16 flex flex-col items-center">
+            <h2 class="text-3xl font-bold mb-4 text-center">About</h2>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                This map application was designed to serve Calgary’s residents by providing key public services data combined with essential environmental and social information. This platform offers a comprehensive view of the city’s infrastructure, safety, and environmental priorities, helping you make informed decisions that impact daily life and future sustainability.
+            </p>
+            <a class="arrow" href="#analysis"></a>
+        </div>
+        
+    </section>
+
+    <section id="analysis" class="flex flex-wrap items-center w-full p-10">
+        <div class="w-full">
+            <h2 class="text-3xl font-bold mb-4 text-center">Analysis</h2>
+            <p class="text-lg leading-relaxed text-justify mb-6 p-4">
+                The Calgary Community Map seamlessly integrates a wide array of data sources, empowering users to thoroughly explore and analyze critical aspects of urban life. By combining various datasets, this innovative platform offers valuable insights into the city's infrastructure, safety, and community services, fostering a deeper understanding of the environment in which residents live. Below, we highlight the key features of our application that enhance user experience and promote informed decision-making.
+            </p>
+        </div>
+    
+        <!-- Crime Heatmap -->
+        <div class="w-full md:w-1/3 p-4">
+            <div class="group relative flex flex-col justify-center items-center h-48 border rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                <h3 class="text-2xl font-semibold">Crime Heatmap</h3>
+                <p class="absolute inset-0 bg-white p-10 rounded-lg text-lg leading-relaxed text-justify opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    Visualize areas with higher crime rates in Calgary using historical data from Calgary Police Services to assess safety effectively.
+                </p>
+            </div>
+        </div>
+    
+        <!-- Police Stations -->
+        <div class="w-full md:w-1/3 p-4">
+            <div class="group relative flex flex-col justify-center items-center h-48 border rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                <h3 class="text-2xl font-semibold">Police Stations</h3>
+                <p class="absolute inset-0 bg-white p-10 rounded-lg text-lg leading-relaxed text-justify opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    Locate police stations in Calgary, complete with contact info and hours for quick access to law enforcement.
+                </p>
+            </div>
+        </div>
+    
+        <!-- Community Services -->
+        <div class="w-full md:w-1/3 p-4">
+            <div class="group relative flex flex-col justify-center items-center h-48 border rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                <h3 class="text-2xl font-semibold">Community Services</h3>
+                <p class="absolute inset-0 bg-white p-10 rounded-lg text-lg leading-relaxed text-justify opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    Access vital public services like health clinics, recreation centers, and libraries to enhance community quality of life.
+                </p>
+            </div>
+        </div>
+    
+        <!-- Traffic Flow -->
+        <div class="w-full md:w-1/3 p-4">
+            <div class="group relative flex flex-col justify-center items-center h-48 border rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                <h3 class="text-2xl font-semibold">Traffic Flow</h3>
+                <p class="absolute inset-0 bg-white p-10 rounded-lg text-lg leading-relaxed text-justify opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    Stay informed with real-time traffic updates with detailed traffic volume data so you can plan your commute effectively.
+                </p>
+            </div>
+        </div>
+    
+        <!-- Priority Species in Canada -->
+        <div class="w-full md:w-1/3 p-4">
+            <div class="group relative flex flex-col justify-center items-center h-48 border rounded-lg shadow-md hover:bg-gray-200 transition duration-300">
+                <h3 class="text-2xl font-semibold">Priority Species in Canada</h3>
+                <p class="absolute inset-0 bg-white p-10 rounded-lg text-lg leading-relaxed text-justify opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    Discover Canada's priority species needing conservation to promote environmental awareness and community action.
+                </p>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Link to your global JS file (app.js) -->
     <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Include this on every page -->
@@ -20,13 +121,6 @@
         // Inject the "Intro goes here" content dynamically
         document.addEventListener("DOMContentLoaded", function() {
             const app = document.getElementById('app');
-            
-            const mainContent = document.createElement('div');
-            mainContent.className = 'p-6';
-            mainContent.innerHTML = `
-                <h1 class="text-4xl font-bold mb-4">Introduction</h1>
-            `;
-
             app.appendChild(mainContent);
         });
     </script>
