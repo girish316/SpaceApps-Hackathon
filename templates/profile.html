@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="app" class="p-6"></div> <!-- Navbar and profile content will be injected here -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Link to your JS file -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch the current user data
+            fetch('/current_user')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.display_name) {
+                        buildProfilePage(data.display_name);
+                    } else {
+                        // Redirect to login page or show login modal if the user is not authenticated
+                        window.location.href = '/'; // Change this to your login modal trigger if needed
+                    }
+                });
+        });
+
+        // Function to dynamically build the profile page
+        function buildProfilePage(displayName) {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <h1 class="text-4xl font-bold mb-4">Hello, ${displayName}</h1>
+                <form id="updateProfileForm" class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700">New Username</label>
+                        <input type="text" id="username" name="username" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter new username">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">New Password</label>
+                        <input type="password" id="password" name="password" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="Enter new password">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Update Profile</button>
+                    <button type="button" id="logoutButton" class="bg-red-500 text-white px-4 py-2 rounded-md">Logout</button>
+                </form>
+            `;
+
+            // Handle profile update form submission
+            document.getElementById('updateProfileForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                fetch('/update_profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ display_name: username, password: password })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Profile updated successfully');
+                        // Optionally refresh or reload the profile page to reflect changes
+                        window.location.reload();
+                    } else {
+                        alert('Error updating profile: ' + data.message);
+                    }
+                });
+            });
+
+            // Handle logout button click
+            document.getElementById('logoutButton').addEventListener('click', function() {
+                fetch('/logout', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to home or login page after logout
+                            window.location.href = '/';
+                        }
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

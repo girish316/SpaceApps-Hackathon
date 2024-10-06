@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"> 
+    <link rel="icon" href="/static/hack.svg" type="image/svg+xml"> 
+</head>
+<body>
+    <div id="app"></div> <!-- Navbar and content will be injected here -->
+
+    <section id="references" class="flex flex-wrap items-center w-full">
+
+        <div class="w-full p-16 flex flex-col items-center">
+            <h2 class="text-3xl font-bold mb-4 text-center">References</h2>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                Community Services Location Data  
+                <a href="https://data.calgary.ca/Services-and-Amenities/Community-Services-Map/mrbn-65ea" class="text-blue-500 hover:underline">Learn more</a>
+            </p>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                Police Service Location Data  
+                <a href="https://data.calgary.ca/Health-and-Safety/Police-Service-Locations/ehvy-b4t6" class="text-blue-500 hover:underline">Learn more</a>
+            </p>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                Crime Rate Data  
+                <a href="https://data.calgary.ca/stories/s/Community-Crime-Data-Lens/sycx-s5a6" class="text-blue-500 hover:underline">Learn more</a>
+            </p>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                Community Boundaries Data  
+                <a href="https://data.calgary.ca/Base-Maps/Community-Boundaries/ab7m-fwn6" class="text-blue-500 hover:underline">Learn more</a>
+            </p>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                Priority Species Data  
+                <a href="https://data.calgary.ca/Base-Maps/Community-Boundaries/ab7m-fwn6" class="text-blue-500 hover:underline">Learn more</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Link to your global JS file (app.js) -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Include this on every page -->
+
+    <script>
+        // Inject the "Intro goes here" content dynamically
+        document.addEventListener("DOMContentLoaded", function() {
+            const app = document.getElementById('app');
+            app.appendChild(mainContent);
+        });
+    </script>
+</body>
+</html>
