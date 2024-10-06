@@ -42,6 +42,11 @@ def profile_page():
 def blog_page():
     return render_template('blog.html')
 
+# Blog page route
+@app.route('/references')
+def references_page():
+    return render_template('references.html')
+
 # Get current user route
 @app.route('/current_user')
 def get_current_user():

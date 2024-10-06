@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"> 
+    <link rel="icon" href="/static/hack.svg" type="image/svg+xml"> 
+</head>
+<body>
+    <div id="app"></div> <!-- Navbar and content will be injected here -->
+
+    <section id="references" class="flex flex-wrap items-center w-full">
+
+        <div class="w-full p-16 flex flex-col items-center">
+            <h2 class="text-3xl font-bold mb-4 text-center">About</h2>
+            <p class="text-lg leading-relaxed text-justify p-6">
+                This map application was designed to serve Calgary’s residents by providing key public services data combined with essential environmental and social information. This platform offers a comprehensive view of the city’s infrastructure, safety, and environmental priorities, helping you make informed decisions that impact daily life and future sustainability.
+            </p>
+            <a class="arrow" href="#analysis"></a>
+        </div>
+    </section>
+
+    <!-- Link to your global JS file (app.js) -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Include this on every page -->
+
+    <script>
+        // Inject the "Intro goes here" content dynamically
+        document.addEventListener("DOMContentLoaded", function() {
+            const app = document.getElementById('app');
+            app.appendChild(mainContent);
+        });
+    </script>
+</body>
+</html>

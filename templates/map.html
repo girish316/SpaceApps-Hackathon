@@ -44,7 +44,6 @@
             <style>
                 #export {
                     position: absolute;
-                    top: 5px;
                     right: 10px;
                     z-index: 999;
                     background: white;
@@ -55,7 +54,7 @@
                     cursor: pointer;
                     font-size: 12px;
                     text-decoration: none;
-                    top: 90px;
+                    top: 130px;
                 }
             </style>
         
@@ -125,40 +124,31 @@
             
 </head>
 <body>
-    <div id="navbar"></div>
-    <script>
+    <div id="app"></div>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script >
         document.addEventListener("DOMContentLoaded", function() {
-            // Inject the navbar HTML dynamically
-            const navbarDiv = document.getElementById('navbar');
-            const navbarHTML = `
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand" href="#">Website Logo</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/map">Map</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/introduction">Introduction</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/blog">Blog</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/profile">Profile</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+
+            const app = document.getElementById('app');
+            const navbar = document.createElement('nav');
+            navbar.className = 'flex items-center justify-between bg-blue-900 p-4';
+            // Build the navbar with buttons for Map, Introduction, Blog, and Users using TailwindCSS
+            navbar.innerHTML = `
+                <div class="logo">
+                    <a href="/"><img src="/static/hack.png" alt="Logo" class="h-10"></a>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/map'">Map</button>
+                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/introduction'">Introduction</button>
+                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/blog'">Blog</button>
+                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/references'">References</button>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="user-button bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300">Profile</button>
+                </div>
             `;
-            navbarDiv.innerHTML = navbarHTML;
 
-
+            app.appendChild(navbar);
         });
     </script>
     
