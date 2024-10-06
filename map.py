@@ -2,7 +2,7 @@ import folium
 import os
 import json
 import requests
-
+from folium.plugins import Draw
 # Map species + population to unique colors as shown in the legend
 SPECIES_POPULATION_COLOR_MAP = {
     ("Barren-ground Caribou", "Dolphin and Union"): "#D462FF",  # Purple
@@ -169,6 +169,22 @@ def add_wildfire_hotspots_layer(m):
     except Exception as e:
         print(f"Error adding Wildfire Hotspots WMS layer: {e}")
 
+def add_protected_areas_wms_layer(m):
+    """Add the protected areas WMS layer to the map."""
+    try:
+        # Add the WMS layer from the provided WMS service
+        folium.WmsTileLayer(
+            url='https://maps-cartes.ec.gc.ca/arcgis/services/CWS_SCF/CPCAD/MapServer/WMSServer',
+            layers='0',  # Layer ID for protected areas (as found in GetCapabilities)
+            name="Protected Areas Data",
+            fmt='image/png',  # WMS typically provides images like PNG
+            transparent=True,
+            control=True
+        ).add_to(m)
+    except Exception as e:
+        print(f"Error adding Protected Areas WMS layer: {e}")
+
+
 def create_map():
     """Create the interactive map with priority species and critical habitats."""
     # Create base map centered on Canada
@@ -198,6 +214,7 @@ def create_map():
     ).add_to(m)
 
 
+
     # Add the Priority Species layer
     add_priority_species_layer(m)
 
@@ -210,10 +227,17 @@ def create_map():
     # Add the Air Quality Hotspots WMS layer
     add_wildfire_hotspots_layer(m)
 
+    add_protected_areas_wms_layer(m)
+
+    draw = Draw(export=True)
+    draw.add_to(m)
+
     # Add Layer Control for base maps and overlays
     folium.LayerControl(position='topright', collapsed=False).add_to(m)
 
     # Add a styled legend dropdown with species + population colors
+# Add a styled legend dropdown with species + population colors
+# Add a styled legend dropdown with species + population colors
     dropdown_html = '''
         <div style="position: fixed; bottom: 20px; right: 10px; width: 320px; height: auto;
                     background-color: white; border:2px solid grey; border-radius: 8px; padding: 15px; z-index:9999; font-size:14px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
@@ -225,6 +249,8 @@ def create_map():
                 <option value="priority">Priority Species Legend</option>
                 <option value="critical">Critical Habitat Legend</option>
                 <option value="vegetation">Vegetation Zones Legend</option>
+                <option value="wildfire">Wildfire Hotspots Legend</option>
+                <option value="protected">Protected Areas Legend</option>
             </select>
 
             <!-- Priority Species Legend -->
@@ -370,16 +396,52 @@ def create_map():
                 </div>
             </div>
 
+            <!-- Wildfire Hotspots Legend -->
+            <div id="wildfire-legend" style="display: none;">
+                <strong>Wildfire Hotspots Legend</strong><br>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #CFCFCF; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Low hotspot activity
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #F9DA7B; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Moderate hotspot activity
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #DE4A00; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> High hotspot activity
+                </div>
+            </div>
+
+             <!-- Protected Areas Legend -->
+            <div id="protected-legend" style="display: none;">
+                <strong>Protected Areas Legend</strong><br>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #006400; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Terrestrial protected area
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #90EE90; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Terrestrial other effective area-based conservation measure
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #0000FF; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Marine protected area
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #00BFFF; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Marine other effective area-based conservation measure
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 6px;">
+                    <div style="background-color: #A9A9A9; width: 30px; height: 15px; border-radius: 2px; margin-right: 10px;"></div> Not included in statistics
+                </div>
+            </div>
+
         </div>
 
-        <script>
-            function showLegend() {
-                var selectedLegend = document.getElementById("legend-select").value;
-                document.getElementById("priority-legend").style.display = (selectedLegend === "priority") ? "block" : "none";
-                document.getElementById("critical-legend").style.display = (selectedLegend === "critical") ? "block" : "none";
-                document.getElementById("vegetation-legend").style.display = (selectedLegend === "vegetation") ? "block" : "none";
-            }
-        </script>
+<script>
+    function showLegend() {
+        var selectedLegend = document.getElementById("legend-select").value;
+        document.getElementById("priority-legend").style.display = (selectedLegend === "priority") ? "block" : "none";
+        document.getElementById("critical-legend").style.display = (selectedLegend === "critical") ? "block" : "none";
+        document.getElementById("vegetation-legend").style.display = (selectedLegend === "vegetation") ? "block" : "none";
+        document.getElementById("wildfire-legend").style.display = (selectedLegend === "wildfire") ? "block" : "none";
+        document.getElementById("protected-legend").style.display = (selectedLegend === "protected") ? "block" : "none";
+    }
+</script>
     '''
 
 
