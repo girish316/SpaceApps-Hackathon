@@ -154,6 +154,20 @@ def add_vegetation_zones_layer(m):
     else:
         print("No vegetation data to load.")
 
+def add_wildfire_hotspots_layer(m):
+    """Add the Wildfire hotspots WMS layer to the map."""
+    try:
+        # Add the WMS layer for RAQDPS-FW.CE_HOTSPOTS.2019
+        folium.WmsTileLayer(
+            url='https://geo.weather.gc.ca/geomet',
+            layers='RAQDPS-FW.CE_HOTSPOTS.2019',
+            name="Wildfire Hotspots 2019",
+            fmt='image/png',
+            transparent=True,
+            control=True
+        ).add_to(m)
+    except Exception as e:
+        print(f"Error adding Wildfire Hotspots WMS layer: {e}")
 
 def create_map():
     """Create the interactive map with priority species and critical habitats."""
@@ -192,6 +206,9 @@ def create_map():
 
     # Add the Vegetation Zones WMS layer
     add_vegetation_zones_layer(m)
+
+    # Add the Air Quality Hotspots WMS layer
+    add_wildfire_hotspots_layer(m)
 
     # Add Layer Control for base maps and overlays
     folium.LayerControl(position='topright', collapsed=False).add_to(m)
