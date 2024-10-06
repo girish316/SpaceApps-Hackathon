@@ -126,31 +126,16 @@
 <body>
     <div id="app"></div>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script >
+    <!-- Link to your global JS file (app.js) -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Include this on every page -->
+
+    <script>
+        // Inject the "Intro goes here" content dynamically
         document.addEventListener("DOMContentLoaded", function() {
-
             const app = document.getElementById('app');
-            const navbar = document.createElement('nav');
-            navbar.className = 'flex items-center justify-between bg-blue-900 p-4';
-            // Build the navbar with buttons for Map, Introduction, Blog, and Users using TailwindCSS
-            navbar.innerHTML = `
-                <div class="logo">
-                    <a href="/"><img src="/static/hack.png" alt="Logo" class="h-10"></a>
-                </div>
-                <div class="flex space-x-4">
-                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/map'">Map</button>
-                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/introduction'">Introduction</button>
-                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/blog'">Blog</button>
-                    <button class="bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300" onclick="window.location.href='/references'">References</button>
-                </div>
-                <div class="flex space-x-4">
-                    <button class="user-button bg-blue-900 text-white py-2 px-4 rounded hover:bg-cyan-500 hover:bg-opacity-20 transition duration-300">Profile</button>
-                </div>
-            `;
-
-            app.appendChild(navbar);
+            app.appendChild(mainContent);
         });
-    </script>
+    </script>    </script>
     
     <div style="position: fixed; 
     bottom: 10px; right: 10px; width: 320px; height: auto; 
