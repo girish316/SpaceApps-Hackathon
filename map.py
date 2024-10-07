@@ -3,7 +3,6 @@ import os
 import json
 import requests
 from folium.plugins import Draw
-# Map species + population to unique colors as shown in the legend
 SPECIES_POPULATION_COLOR_MAP = {
     ("Barren-ground Caribou", "Dolphin and Union"): "#D462FF",  # Purple
     ("Caribou", "Barren-ground"): "#5588FF",  # Blue
@@ -14,7 +13,6 @@ SPECIES_POPULATION_COLOR_MAP = {
     ("Woodland Caribou", "Southern Mountain"): "#5FCB5A",  # Green
 }
 
-# Local path for the saved Priority Species GeoJSON file
 PRIORITY_SPECIES_FILE_PATH = 'static/priority_species.geojson'
 
 def load_local_geojson(file_path):
@@ -45,7 +43,6 @@ def add_priority_species_layer(m):
     if species_data:
         species_data = preprocess_species_data(species_data)
 
-        # Define a style function to color the species regions
         def style_species(feature):
             species = feature['properties'].get('CommName_E', 'Unknown')
             population = feature['properties'].get('Population_E', None)
@@ -57,7 +54,6 @@ def add_priority_species_layer(m):
                 'fillOpacity': 0.7
             }
 
-        # Add species GeoJSON layer to the map
         folium.GeoJson(
             species_data,
             name="Priority Species Data",
@@ -75,12 +71,11 @@ def add_priority_species_layer(m):
 def add_critical_habitat_layer(m):
     """Add the critical habitat WMS layer to the map."""
     try:
-        # Add the WMS layer from the provided WMS service
         folium.WmsTileLayer(
             url='https://maps-cartes.ec.gc.ca/arcgis/services/CWS_SCF/CriticalHabitat/MapServer/WMSServer',
-            layers='0',  # Layer ID for Critical Habitat (as found in GetCapabilities)
+            layers='0',
             name="Critical Habitat Data",
-            fmt='image/png',  # WMS typically provides images like PNG
+            fmt='image/png',
             transparent=True,
             control=True
         ).add_to(m)
@@ -89,10 +84,8 @@ def add_critical_habitat_layer(m):
 
 def add_vegetation_zones_layer(m):
     """Add the Vegetation Zones GeoJSON layer to the map."""
-    # Local path for the Vegetation Zones GeoJSON file
     VEGETATION_ZONES_FILE_PATH = 'static/vegetation_map.geojson'
 
-    # Define a color map based on vegetation names
     VEGETATION_COLOR_MAP = {
     "High Arctic Sparse Tundra": "#D4E157",
     "Mid-Arctic Dwarf Shrub Tundra": "#FFEB3B",
@@ -130,11 +123,9 @@ def add_vegetation_zones_layer(m):
     }
 
 
-    # Load the GeoJSON data
     vegetation_data = load_local_geojson(VEGETATION_ZONES_FILE_PATH)
 
     if vegetation_data:
-        # Add the GeoJSON layer to the map with a proper style and tooltip
         folium.GeoJson(
             vegetation_data,
             name="Vegetation Zones",
@@ -145,7 +136,7 @@ def add_vegetation_zones_layer(m):
                 'fillOpacity': 0.6
             },
             tooltip=folium.GeoJsonTooltip(
-                fields=['level_1'],  # Adjust the field based on available fields in your GeoJSON
+                fields=['level_1'],
                 aliases=['Vegetation Zone:'],
                 localize=True,
                 sticky=True
@@ -157,7 +148,6 @@ def add_vegetation_zones_layer(m):
 def add_wildfire_hotspots_layer(m):
     """Add the Wildfire hotspots WMS layer to the map."""
     try:
-        # Add the WMS layer for RAQDPS-FW.CE_HOTSPOTS.2019
         folium.WmsTileLayer(
             url='https://geo.weather.gc.ca/geomet',
             layers='RAQDPS-FW.CE_HOTSPOTS.2019',
@@ -172,12 +162,11 @@ def add_wildfire_hotspots_layer(m):
 def add_protected_areas_wms_layer(m):
     """Add the protected areas WMS layer to the map."""
     try:
-        # Add the WMS layer from the provided WMS service
         folium.WmsTileLayer(
             url='https://maps-cartes.ec.gc.ca/arcgis/services/CWS_SCF/CPCAD/MapServer/WMSServer',
-            layers='0',  # Layer ID for protected areas (as found in GetCapabilities)
+            layers='0',
             name="Protected Areas Data",
-            fmt='image/png',  # WMS typically provides images like PNG
+            fmt='image/png',
             transparent=True,
             control=True
         ).add_to(m)
@@ -187,15 +176,13 @@ def add_protected_areas_wms_layer(m):
 
 def create_map():
     """Create the interactive map with priority species and critical habitats."""
-    # Create base map centered on Canada
     m = folium.Map(
-        location=[56.1304, -106.3468],  # Center on Canada
+        location=[56.1304, -106.3468],
         zoom_start=4,
         control_scale=True,
-        tiles=None  # No default tiles
+        tiles=None
     )
 
-    # Add OpenStreetMap as a base layer
     folium.TileLayer(
         tiles="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         attr="&copy; OpenStreetMap contributors",
@@ -204,7 +191,6 @@ def create_map():
         control=True
     ).add_to(m)
 
-    # Add ArcGIS Satellite Imagery as a base layer
     folium.TileLayer(
         tiles="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         attr="Esri",
@@ -214,17 +200,9 @@ def create_map():
     ).add_to(m)
 
 
-
-    # Add the Priority Species layer
     add_priority_species_layer(m)
-
-    # Add the Critical Habitat WMS layer
     add_critical_habitat_layer(m)
-
-    # Add the Vegetation Zones WMS layer
     add_vegetation_zones_layer(m)
-
-    # Add the Air Quality Hotspots WMS layer
     add_wildfire_hotspots_layer(m)
 
     add_protected_areas_wms_layer(m)
@@ -232,12 +210,8 @@ def create_map():
     draw = Draw(export=True)
     draw.add_to(m)
 
-    # Add Layer Control for base maps and overlays
     folium.LayerControl(position='topright', collapsed=False).add_to(m)
 
-    # Add a styled legend dropdown with species + population colors
-# Add a styled legend dropdown with species + population colors
-# Add a styled legend dropdown with species + population colors
     dropdown_html = '''
         <div style="position: fixed; bottom: 20px; right: 10px; width: 320px; height: auto;
                     background-color: white; border:2px solid grey; border-radius: 8px; padding: 15px; z-index:9999; font-size:14px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
@@ -445,10 +419,8 @@ def create_map():
     '''
 
 
-    # Add the legend HTML to the map
     m.get_root().html.add_child(folium.Element(dropdown_html))
 
-    # Save the map to the 'templates' folder, replacing the old one
     m.save('templates/map.html')
 
 if __name__ == "__main__":

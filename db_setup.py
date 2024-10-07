@@ -1,10 +1,8 @@
 import sqlite3
 
-# Connect to the database
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
 
-# Create users table
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,7 +11,6 @@ CREATE TABLE IF NOT EXISTS users (
 )
 ''')
 
-# Create blogs table
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS blogs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,6 +22,5 @@ CREATE TABLE IF NOT EXISTS blogs (
 )
 ''')
 
-# Commit changes and close the connection
 conn.commit()
 conn.close()
