@@ -151,17 +151,20 @@ function loadBlogs() {
         .then(response => response.json())
         .then(data => {
             const blogContainer = document.querySelector('.blog-container');
+            
             blogContainer.innerHTML = ''; // Clear existing content
             data.blogs.forEach(blog => {
                 const blogPost = document.createElement('div');
-                blogPost.className = 'border p-4 mb-4 bg-white rounded-lg shadow-md';
+                blogPost.className = 'border p-10 mb-4 bg-white rounded-lg shadow-md';
                 blogPost.innerHTML = `
-                    <p><strong>Username:</strong> ${blog.username}</p>
+                    <p><strong>Username:   </strong> ${blog.username}</p>
                     <input class="font-bold text-xl mb-2 border p-2 w-full blog-title-${blog.id}" value="${blog.title}" readonly>
                     <textarea class="text-lg border p-2 w-full blog-content-${blog.id}" readonly>${blog.content}</textarea>
                     <div class="mt-4">
-                        <button class="bg-blue-500 text-white p-2 rounded mr-2" style="margin-top: 10px;" onclick="editBlog(${blog.id})">Edit</button>
-                        <button class="bg-red-500 text-white p-2 rounded" style="margin-top: 10px;" onclick="deleteBlog(${blog.id})">Delete</button>
+                        ${data.current_user_id === blog.user_id ? `
+                            <button class="bg-blue-500 text-white p-2 rounded mr-2" style="margin-top: 10px;" onclick="editBlog(${blog.id})">Edit</button>
+                            <button class="bg-red-500 text-white p-2 rounded" style="margin-top: 10px;" onclick="deleteBlog(${blog.id})">Delete</button>
+                        ` : ''}
                     </div>
                 `;
                 blogContainer.appendChild(blogPost);
