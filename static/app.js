@@ -40,7 +40,7 @@ function buildNavbar() {
     `;
     app.appendChild(navbar);
 
-    // Attach event listener for the Users button
+    // Attach event listener for the Profile button
     document.querySelector('.user-button').addEventListener('click', function(e) {
         e.preventDefault();  // Prevent default link behavior
         checkIfUserLoggedIn().then(isLoggedIn => {
@@ -49,6 +49,8 @@ function buildNavbar() {
             } else {
                 openLoginModal();  // Open login modal if not logged in
             }
+        }).catch(error => {
+            console.error('Error handling login status:', error);
         });
     });
 }
@@ -56,8 +58,22 @@ function buildNavbar() {
 // Function to check if the user is logged in and return a promise
 function checkIfUserLoggedIn() {
     return fetch('/check_login')
-        .then(response => response.json())
-        .then(data => data.logged_in);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (typeof data.logged_in === 'undefined') {
+                throw new Error('Invalid response structure');
+            }
+            return data.logged_in;
+        })
+        .catch(error => {
+            console.error('Error checking login status:', error);
+            return false;  // Default to logged out in case of error
+        });
 }
 
 // Open login modal (shared for both User and Create Blog buttons)
@@ -107,27 +123,17 @@ function updateUserSettings() {
     const newUsername = document.getElementById('edit-username').value;
     const newPassword = document.getElementById('edit-password').value;
 
-    // Check if old password is provided
     if (!oldPassword) {
         alert('Please enter your old password for confirmation.');
         return;
     }
 
-    fetch('/update_profile', {  // Updated the route to match the one in app.py
+    fetch('/update_profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            old_password: oldPassword, 
-            display_name: newUsername,  // Use "display_name" as in your app.py
-            password: newPassword
-        })
+        body: JSON.stringify({ old_password: oldPassword, display_name: newUsername, password: newPassword })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('404 - Endpoint not found');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
             closeModal();
@@ -155,7 +161,7 @@ function logout() {
     });
 }
 
-// Open sign-up modal (shared for both User and Create Blog buttons)
+// Open sign-up modal (shared for both User and Create Blog buttons) with password validation
 function openSignupModal() {
     closeModal(); // Ensure any existing modal is closed before opening a new one
 
@@ -175,7 +181,37 @@ function openSignupModal() {
     document.body.appendChild(modal);
 }
 
-// Handle user login process (shared for both User and Create Blog buttons)
+// Handle user signup process with password validation
+function signup() {
+    const displayName = document.getElementById('signup-display-name').value;
+    const password = document.getElementById('signup-password').value;
+
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/;  // At least one letter, one number, and 7 characters minimum
+    if (!passwordRegex.test(password)) {
+        alert('Password must be at least 7 characters long and contain at least one letter and one number.');
+        return;
+    }
+
+    // Proceed with signup if the password is valid
+    fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ display_name: displayName, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeModal();
+            openLoginModal(); // Open the login modal after successful signup
+        } else {
+            alert(data.message || 'Error signing up.');
+        }
+    })
+    .catch(err => console.error('Error during signup:', err));
+}
+
+// Function to handle user login process
 function login() {
     const displayName = document.getElementById('login-display-name').value;
     const password = document.getElementById('login-password').value;
@@ -190,34 +226,14 @@ function login() {
         if (data.success) {
             closeModal();
             alert('Login successful.');
+            window.location.reload(); // Reload the page to reflect login status
         } else {
             alert('Invalid login credentials.');
         }
     });
 }
 
-// Handle user signup process (shared for both User and Create Blog buttons)
-function signup() {
-    const displayName = document.getElementById('signup-display-name').value;
-    const password = document.getElementById('signup-password').value;
-
-    fetch('/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ display_name: displayName, password: password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            closeModal();
-            openLoginModal(); // Open the login modal after successful signup
-        } else {
-            alert(data.message || 'Error signing up.');
-        }
-    });
-}
-
-// Function to close the modal (shared for both User and Create Blog buttons)
+// Function to close the modal
 function closeModal() {
     const modal = document.querySelector('.modal');
     if (modal) {
