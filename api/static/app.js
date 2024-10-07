@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // Build the navbar when the page loads
     buildNavbar();
 
+    // Depending on the page, call different functions to build the content
     if (window.location.pathname === '/') {
         buildHomePage();
     } else if (window.location.pathname === '/introduction') {
@@ -8,17 +10,20 @@ document.addEventListener("DOMContentLoaded", function() {
     } else if (window.location.pathname === '/profile') {
         buildProfilePage();
     } else if (window.location.pathname === '/blog') {
-        buildBlogPage();
+        buildBlogPage();  // Make sure blog page is built if on blog page
     }
 
+    // Check if the user is logged in for both User button and Create Blog button
     checkIfUserLoggedIn();
 });
 
+// Function to dynamically build the navbar (shared across all pages)
 function buildNavbar() {
     const app = document.getElementById('app');
     const navbar = document.createElement('nav');
     navbar.className = 'flex items-center justify-between bg-blue-900 p-4';
 
+    // Build the navbar with buttons for Map, Introduction, Blog, and Users using TailwindCSS
     navbar.innerHTML = `
         <div class="logo">
             <a href="/"><img src="/static/hack.png" alt="Logo" class="h-10"></a>
@@ -35,13 +40,14 @@ function buildNavbar() {
     `;
     app.appendChild(navbar);
 
+    // Attach event listener for the Profile button
     document.querySelector('.user-button').addEventListener('click', function(e) {
-        e.preventDefault();
+        e.preventDefault();  // Prevent default link behavior
         checkIfUserLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
-                openUserSettingsModal();
+                openUserSettingsModal();  // Open user settings modal if logged in
             } else {
-                openLoginModal();
+                openLoginModal();  // Open login modal if not logged in
             }
         }).catch(error => {
             console.error('Error handling login status:', error);
@@ -49,6 +55,7 @@ function buildNavbar() {
     });
 }
 
+// Function to check if the user is logged in and return a promise
 function checkIfUserLoggedIn() {
     return fetch('/check_login')
         .then(response => {
@@ -65,12 +72,13 @@ function checkIfUserLoggedIn() {
         })
         .catch(error => {
             console.error('Error checking login status:', error);
-            return false;
+            return false;  // Default to logged out in case of error
         });
 }
 
+// Open login modal (shared for both User and Create Blog buttons)
 function openLoginModal() {
-    closeModal();
+    closeModal(); // Ensure any existing modal is closed before opening a new one
 
     const modal = document.createElement('div');
     modal.className = 'modal fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center';
@@ -88,8 +96,9 @@ function openLoginModal() {
     document.body.appendChild(modal);
 }
 
+// Open user settings modal if logged in
 function openUserSettingsModal() {
-    closeModal();
+    closeModal(); // Close any existing modals
 
     const modal = document.createElement('div');
     modal.className = 'modal fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center';
@@ -108,6 +117,7 @@ function openUserSettingsModal() {
     document.body.appendChild(modal);
 }
 
+// Handle user settings update with old password confirmation
 function updateUserSettings() {
     const oldPassword = document.getElementById('old-password').value;
     const newUsername = document.getElementById('edit-username').value;
@@ -137,21 +147,23 @@ function updateUserSettings() {
     });
 }
 
+// Handle user logout
 function logout() {
     fetch('/logout', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             closeModal();
-            window.location.reload();
+            window.location.reload(); // Refresh the page after logout
         } else {
             alert('Error logging out.');
         }
     });
 }
 
+// Open sign-up modal (shared for both User and Create Blog buttons) with password validation
 function openSignupModal() {
-    closeModal();
+    closeModal(); // Ensure any existing modal is closed before opening a new one
 
     const modal = document.createElement('div');
     modal.className = 'modal fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center';
@@ -169,16 +181,19 @@ function openSignupModal() {
     document.body.appendChild(modal);
 }
 
+// Handle user signup process with password validation
 function signup() {
     const displayName = document.getElementById('signup-display-name').value;
     const password = document.getElementById('signup-password').value;
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/;
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/;  // At least one letter, one number, and 7 characters minimum
     if (!passwordRegex.test(password)) {
         alert('Password must be at least 7 characters long and contain at least one letter and one number.');
         return;
     }
 
+    // Proceed with signup if the password is valid
     fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -188,7 +203,7 @@ function signup() {
     .then(data => {
         if (data.success) {
             closeModal();
-            openLoginModal();
+            openLoginModal(); // Open the login modal after successful signup
         } else {
             alert(data.message || 'Error signing up.');
         }
@@ -196,6 +211,7 @@ function signup() {
     .catch(err => console.error('Error during signup:', err));
 }
 
+// Function to handle user login process
 function login() {
     const displayName = document.getElementById('login-display-name').value;
     const password = document.getElementById('login-password').value;
@@ -210,13 +226,14 @@ function login() {
         if (data.success) {
             closeModal();
             alert('Login successful.');
-            window.location.reload();
+            window.location.reload(); // Reload the page to reflect login status
         } else {
             alert('Invalid login credentials.');
         }
     });
 }
 
+// Function to close the modal
 function closeModal() {
     const modal = document.querySelector('.modal');
     if (modal) {

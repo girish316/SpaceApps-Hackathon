@@ -9,7 +9,7 @@
     <link rel="icon" href="/static/hack.svg" type="image/svg+xml"> 
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app"></div> <!-- Navbar and content will be injected here -->
 
     <section id="references" class="flex flex-wrap items-center w-full">
 
@@ -38,9 +38,11 @@
         </div>
     </section>
 
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <!-- Link to your global JS file (app.js) -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Include this on every page -->
 
     <script>
+        // Inject the "Intro goes here" content dynamically
         document.addEventListener("DOMContentLoaded", function() {
             const app = document.getElementById('app');
             app.appendChild(mainContent);

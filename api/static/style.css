@@ -1,3 +1,4 @@
+/* Base Styles */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -13,12 +14,13 @@ header {
     padding: 20px;
 }
 
+/* Main Flexbox Layout */
 main {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Space out the items */
+    padding: 20px; /* Add padding for better spacing */
 
     gap: 5%;
 
@@ -40,6 +42,7 @@ p {
     width: fit-content;
 }
 
+/* Image Styling */
 .image-container {
     border-radius: 10px;
     display: flex;
@@ -51,10 +54,11 @@ p {
 }
 
 .image-container img {
-    width: 100%;
+    width: 100%; /* Adjust to occupy full container width */
     border-radius: 10px;
 }
 
+/* Button Styling */
 .button-container {
     display: flex;
     justify-content: center;
@@ -95,13 +99,13 @@ p {
     padding-bottom: 10px;
 
     background-image: linear-gradient(to right, black 50%, transparent 50%);
-    background-size: 300% 100%;
-    background-position: right bottom;
+    background-size: 300% 100%; /* Double the width for the fill effect */
+    background-position: right bottom; /* Start position of the background */
     transition: background-position 0.5s ease, color 0.5s ease;
 
     &:hover {
-        background-position: left bottom;
-        color: white;
+        background-position: left bottom; /* Move background to left on hover */
+        color: white; /* Change text color on hover */
     }
 }
 

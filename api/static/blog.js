@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Build the navbar when the page loads
     buildNavbar();
 
+    // Build the blog page content
     buildBlogPage();
 
+    // Check if the user is logged in and set up the Create Blog button accordingly
     checkIfUserLoggedIn().then(isLoggedIn => {
         if (isLoggedIn) {
             setupLoggedInUI();
@@ -12,9 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Function to dynamically build the navbar on the blog page
 function buildNavbar() {
     const app = document.getElementById('app');
-    if (!app) return;
+    if (!app) return; // Make sure the element exists
     const navbar = document.createElement('nav');
     navbar.className = 'flex items-center justify-between bg-blue-900 p-4';
 
@@ -34,13 +38,14 @@ function buildNavbar() {
     `;
     app.appendChild(navbar);
 
+    // Attach event listener for the Profile button
     document.querySelector('.user-button').addEventListener('click', function(e) {
-        e.preventDefault();
+        e.preventDefault();  // Prevent default link behavior
         checkIfUserLoggedIn().then(isLoggedIn => {
             if (isLoggedIn) {
-                openUserSettingsModal();
+                openUserSettingsModal();  // Open user settings modal if logged in
             } else {
-                openLoginModal();
+                openLoginModal();  // Open login modal if not logged in
             }
         }).catch(error => {
             console.error('Error handling login status:', error);
@@ -48,6 +53,7 @@ function buildNavbar() {
     });
 }
 
+// Function to check if the user is logged in and return a promise
 function checkIfUserLoggedIn() {
     return fetch('/check_login')
         .then(response => {
@@ -64,10 +70,11 @@ function checkIfUserLoggedIn() {
         })
         .catch(error => {
             console.error('Error checking login status:', error);
-            return false;
+            return false;  // Default to logged out in case of error
         });
 }
 
+// Function to set up UI for logged-in users
 function setupLoggedInUI() {
     const createBlogBtn = document.getElementById('create-blog-btn');
     if (createBlogBtn) {
@@ -76,18 +83,20 @@ function setupLoggedInUI() {
     }
 }
 
+// Function to set up UI for logged-out users
 function setupLoggedOutUI() {
     const createBlogBtn = document.getElementById('create-blog-btn');
     if (createBlogBtn) {
-        createBlogBtn.disabled = false;
+        createBlogBtn.disabled = false; // Ensure the button is always clickable
         createBlogBtn.addEventListener('click', function () {
-            openLoginModal();
+            openLoginModal();  // Open login modal if not logged in
         });
     }
 }
 
+// Function to open login modal
 function openLoginModal() {
-    closeModal();
+    closeModal(); // Ensure any existing modal is closed before opening a new one
 
     const modal = document.createElement('div');
     modal.className = 'modal fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center';
@@ -105,6 +114,7 @@ function openLoginModal() {
     document.body.appendChild(modal);
 }
 
+// Function to close the modal
 function closeModal() {
     const modal = document.querySelector('.modal');
     if (modal) {
@@ -112,6 +122,7 @@ function closeModal() {
     }
 }
 
+// Function to create a new blog post
 function createBlog() {
     const title = document.getElementById('blog-title').value;
     const content = document.getElementById('blog-content').value;
@@ -124,9 +135,9 @@ function createBlog() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            loadBlogs();
-            document.getElementById('blog-title').value = '';
-            document.getElementById('blog-content').value = '';
+            loadBlogs();  // Reload blogs after creating a new one
+            document.getElementById('blog-title').value = '';  // Clear input
+            document.getElementById('blog-content').value = '';  // Clear input
         } else {
             alert('Error creating blog.');
         }
@@ -140,7 +151,7 @@ function loadBlogs() {
         .then(data => {
             const blogContainer = document.querySelector('.blog-container');
             
-            blogContainer.innerHTML = '';
+            blogContainer.innerHTML = ''; // Clear existing content
             data.blogs.forEach(blog => {
                 const blogPost = document.createElement('div');
                 blogPost.className = 'border p-10 mb-4 bg-white rounded-lg shadow-md';
@@ -159,20 +170,21 @@ function loadBlogs() {
                 `;
                 blogContainer.appendChild(blogPost);
 
+                // Add event listeners to toggle height on button click
                 const readMoreBtn = blogPost.querySelector(`.read-more-btn[data-blog-id="${blog.id}"]`);
                 const shrinkBtn = blogPost.querySelector(`.shrink-btn[data-blog-id="${blog.id}"]`);
                 const textarea = blogPost.querySelector(`.blog-content-${blog.id}`);
 
                 readMoreBtn.addEventListener('click', function() {
-                    textarea.style.height = 'auto'; 
-                    textarea.style.height = textarea.scrollHeight + 'px';
+                    textarea.style.height = 'auto'; // Expanded height
+                    textarea.style.height = textarea.scrollHeight + 'px'; // Adjust height based on content
                     textarea.dataset.expanded = 'true';
                     readMoreBtn.style.display = 'none';
                     shrinkBtn.style.display = 'inline-block';
                 });
 
                 shrinkBtn.addEventListener('click', function() {
-                    textarea.style.height = '100px';
+                    textarea.style.height = '100px'; // Collapsed height
                     textarea.dataset.expanded = 'false';
                     readMoreBtn.style.display = 'inline-block';
                     shrinkBtn.style.display = 'none';
@@ -185,9 +197,10 @@ function loadBlogs() {
 
 
 
+// Function to dynamically build the blog page content
 function buildBlogPage() {
     const app = document.getElementById('app');
-    if (!app) return;
+    if (!app) return; // Ensure the app element exists
 
     const mainContent = document.createElement('div');
     mainContent.className = 'p-6';
@@ -206,28 +219,34 @@ function buildBlogPage() {
 
     app.appendChild(mainContent);
 
+    // Set up the Create Blog button functionality
     setupCreateBlog();
 
+    // Call the function to load blogs
     loadBlogs();
 }
 
+// Function to set up the Create Blog button event listener
 function setupCreateBlog() {
     const createBlogBtn = document.getElementById('create-blog-btn');
     createBlogBtn.addEventListener('click', createBlog);
 }
 
+// Function to enable inline editing of a blog post
 function editBlog(blogId) {
     const titleInput = document.querySelector(`.blog-title-${blogId}`);
     const contentTextarea = document.querySelector(`.blog-content-${blogId}`);
     const editButton = document.querySelector(`button[onclick="editBlog(${blogId})"]`);
 
     if (titleInput.readOnly) {
+        // Make the fields editable
         titleInput.readOnly = false;
         contentTextarea.readOnly = false;
         titleInput.classList.add('border-blue-500');
         contentTextarea.classList.add('border-blue-500');
-        editButton.textContent = 'Save';
+        editButton.textContent = 'Save';  // Change button to "Save"
     } else {
+        // Save the changes
         const newTitle = titleInput.value;
         const newContent = contentTextarea.value;
 
@@ -243,8 +262,8 @@ function editBlog(blogId) {
                 contentTextarea.readOnly = true;
                 titleInput.classList.remove('border-blue-500');
                 contentTextarea.classList.remove('border-blue-500');
-                editButton.textContent = 'Edit';
-                loadBlogs();
+                editButton.textContent = 'Edit';  // Change button back to "Edit"
+                loadBlogs();  // Reload the blogs to reflect updates
             } else {
                 alert('Error saving blog.');
             }
@@ -253,14 +272,16 @@ function editBlog(blogId) {
     }
 }
 
+// Function to delete a blog post
 function deleteBlog(blogId) {
     fetch(`/delete_blog/${blogId}`, { method: 'POST' })
-        .then(() => loadBlogs())
+        .then(() => loadBlogs())  // Reload blogs after deletion
         .catch(err => console.error('Error deleting blog:', err));
 }
 
+// Function to open sign-up modal with validation
 function openSignupModal() {
-    closeModal();
+    closeModal(); // Ensure any existing modal is closed before opening a new one
 
     const modal = document.createElement('div');
     modal.className = 'modal fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center';
@@ -278,16 +299,19 @@ function openSignupModal() {
     document.body.appendChild(modal);
 }
 
+// Function to handle user signup process with password validation
 function signup() {
     const displayName = document.getElementById('signup-display-name').value;
     const password = document.getElementById('signup-password').value;
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/;
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{7,}$/;  // At least one letter, one number, and 7 characters minimum
     if (!passwordRegex.test(password)) {
         alert('Password must be at least 7 characters long and contain at least one letter and one number.');
         return;
     }
 
+    // Proceed with signup if the password is valid
     fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -297,7 +321,7 @@ function signup() {
     .then(data => {
         if (data.success) {
             closeModal();
-            openLoginModal();
+            openLoginModal(); // Open the login modal after successful signup
         } else {
             alert(data.message || 'Error signing up.');
         }
@@ -305,6 +329,7 @@ function signup() {
     .catch(err => console.error('Error during signup:', err));
 }
 
+// Function to handle user login process
 function login() {
     const displayName = document.getElementById('login-display-name').value;
     const password = document.getElementById('login-password').value;
@@ -319,15 +344,16 @@ function login() {
         if (data.success) {
             closeModal();
             alert('Login successful.');
-            window.location.reload();
+            window.location.reload(); // Reload the page to reflect login status
         } else {
             alert('Invalid login credentials.');
         }
     });
 }
 
+// Function to open user settings modal if logged in
 function openUserSettingsModal() {
-    closeModal();
+    closeModal(); // Close any existing modals
 
     const modal = document.createElement('div');
     modal.className = 'modal fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center';
@@ -346,6 +372,7 @@ function openUserSettingsModal() {
     document.body.appendChild(modal);
 }
 
+// Function to handle user settings update with old password confirmation
 function updateUserSettings() {
     const oldPassword = document.getElementById('old-password').value;
     const newUsername = document.getElementById('edit-username').value;
@@ -375,13 +402,14 @@ function updateUserSettings() {
     });
 }
 
+// Function to handle user logout
 function logout() {
     fetch('/logout', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             closeModal();
-            window.location.reload(); 
+            window.location.reload(); // Refresh the page after logout
         } else {
             alert('Error logging out.');
         }

@@ -7,22 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div id="app" class="p-6"></div>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <div id="app" class="p-6"></div> <!-- Navbar and profile content will be injected here -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Link to your JS file -->
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Fetch the current user data
             fetch('/current_user')
                 .then(response => response.json())
                 .then(data => {
                     if (data.display_name) {
                         buildProfilePage(data.display_name);
                     } else {
-                        window.location.href = '/';
+                        // Redirect to login page or show login modal if the user is not authenticated
+                        window.location.href = '/'; // Change this to your login modal trigger if needed
                     }
                 });
         });
 
+        // Function to dynamically build the profile page
         function buildProfilePage(displayName) {
             const app = document.getElementById('app');
             app.innerHTML = `
@@ -41,6 +44,7 @@
                 </form>
             `;
 
+            // Handle profile update form submission
             document.getElementById('updateProfileForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 const username = document.getElementById('username').value;
@@ -55,6 +59,7 @@
                 .then(data => {
                     if (data.success) {
                         alert('Profile updated successfully');
+                        // Optionally refresh or reload the profile page to reflect changes
                         window.location.reload();
                     } else {
                         alert('Error updating profile: ' + data.message);
@@ -62,11 +67,13 @@
                 });
             });
 
+            // Handle logout button click
             document.getElementById('logoutButton').addEventListener('click', function() {
                 fetch('/logout', { method: 'POST' })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            // Redirect to home or login page after logout
                             window.location.href = '/';
                         }
                     });
