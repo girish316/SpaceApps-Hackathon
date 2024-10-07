@@ -63,8 +63,10 @@ def map_page():
 # Blog operations
 @app.route('/get_blogs')
 def get_blogs():
-    blogs = Blog.query.all()
-    blogs_data = [{'id': blog.id, 'content': blog.content, 'user_id': blog.user_id} for blog in blogs]
+    blogs = db.session.query(Blog, User).join(User, Blog.user_id == User.id).all()
+    blogs_data = [{'id': blog.id, 'content': blog.content, 'username': user.display_name} for blog, user in blogs]
+
+    print(blogs_data)
     return jsonify(blogs=blogs_data)
 
 @app.route('/create_blog', methods=['POST'])
