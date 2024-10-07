@@ -18,6 +18,7 @@ class User(UserMixin, db.Model):
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+    title = db.Column(db.Text, nullable=False)  # Ensure this line is added
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='blogs')
     likes = db.Column(db.Integer, default=0)
