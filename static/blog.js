@@ -145,7 +145,6 @@ function createBlog() {
     .catch(err => console.error('Error creating blog:', err));
 }
 
-// Function to load blogs dynamically via AJAX and insert them into the DOM
 function loadBlogs() {
     fetch('/get_blogs')
         .then(response => response.json())
@@ -157,9 +156,11 @@ function loadBlogs() {
                 const blogPost = document.createElement('div');
                 blogPost.className = 'border p-10 mb-4 bg-white rounded-lg shadow-md';
                 blogPost.innerHTML = `
-                    <p><strong>Username:   </strong> ${blog.username}</p>
+                    <p><strong>${blog.username}</strong></p>
                     <input class="font-bold text-xl mb-2 border p-2 w-full blog-title-${blog.id}" value="${blog.title}" readonly>
-                    <textarea class="text-lg border p-2 w-full blog-content-${blog.id}" readonly>${blog.content}</textarea>
+                    <textarea class="text-lg border p-2 w-full blog-content-${blog.id} expandable-textarea" readonly data-expanded="false" style="height: 100px;">${blog.content}</textarea>
+                    <button class="bg-gray-500 text-white p-2 rounded mt-2 read-more-btn" data-blog-id="${blog.id}">Read More</button>
+                    <button class="bg-gray-500 text-white p-2 rounded mt-2 shrink-btn" data-blog-id="${blog.id}" style="display: none;">Shrink</button>
                     <div class="mt-4">
                         ${data.current_user_id === blog.user_id ? `
                             <button class="bg-blue-500 text-white p-2 rounded mr-2" style="margin-top: 10px;" onclick="editBlog(${blog.id})">Edit</button>
@@ -168,10 +169,33 @@ function loadBlogs() {
                     </div>
                 `;
                 blogContainer.appendChild(blogPost);
+
+                // Add event listeners to toggle height on button click
+                const readMoreBtn = blogPost.querySelector(`.read-more-btn[data-blog-id="${blog.id}"]`);
+                const shrinkBtn = blogPost.querySelector(`.shrink-btn[data-blog-id="${blog.id}"]`);
+                const textarea = blogPost.querySelector(`.blog-content-${blog.id}`);
+
+                readMoreBtn.addEventListener('click', function() {
+                    textarea.style.height = 'auto'; // Expanded height
+                    textarea.style.height = textarea.scrollHeight + 'px'; // Adjust height based on content
+                    textarea.dataset.expanded = 'true';
+                    readMoreBtn.style.display = 'none';
+                    shrinkBtn.style.display = 'inline-block';
+                });
+
+                shrinkBtn.addEventListener('click', function() {
+                    textarea.style.height = '100px'; // Collapsed height
+                    textarea.dataset.expanded = 'false';
+                    readMoreBtn.style.display = 'inline-block';
+                    shrinkBtn.style.display = 'none';
+                });
             });
         })
         .catch(err => console.error('Error loading blogs:', err));
 }
+
+
+
 
 // Function to dynamically build the blog page content
 function buildBlogPage() {
@@ -239,7 +263,7 @@ function editBlog(blogId) {
                 titleInput.classList.remove('border-blue-500');
                 contentTextarea.classList.remove('border-blue-500');
                 editButton.textContent = 'Edit';  // Change button back to "Edit"
-                loadBlogs();  // Optionally reload the blogs to reflect updates
+                loadBlogs();  // Reload the blogs to reflect updates
             } else {
                 alert('Error saving blog.');
             }

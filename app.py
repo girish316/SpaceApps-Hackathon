@@ -86,7 +86,10 @@ def edit_blog(blog_id):
         return jsonify(success=False), 403  # Forbidden if user doesn't own the blog
 
     data = request.get_json()
+
     blog.content = data['content']
+    blog.title = data['title']
+
     db.session.commit()
     return jsonify(success=True)
 
