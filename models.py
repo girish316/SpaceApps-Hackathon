@@ -23,3 +23,4 @@ class Blog(db.Model):
     likes = db.Column(db.Integer, default=0)
     dislikes = db.Column(db.Integer, default=0)
     replies = db.Column(db.PickleType, default=[])
+    

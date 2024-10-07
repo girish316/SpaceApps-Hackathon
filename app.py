@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import db, User, Blog
 from flask_bcrypt import Bcrypt
-from map import create_map
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -64,15 +63,17 @@ def map_page():
 # Blog operations
 @app.route('/get_blogs')
 def get_blogs():
-    blogs = Blog.query.all()
-    blogs_data = [{'id': blog.id, 'content': blog.content, 'user_id': blog.user_id} for blog in blogs]
+    blogs = db.session.query(Blog, User).join(User, Blog.user_id == User.id).all()
+    blogs_data = [{'id': blog.id, 'content': blog.content, 'username': user.display_name} for blog, user in blogs]
+
     return jsonify(blogs=blogs_data)
 
 @app.route('/create_blog', methods=['POST'])
 @login_required
 def create_blog():
     data = request.get_json()
-    new_blog = Blog(content=data['content'], user_id=current_user.id)
+
+    new_blog = Blog(content=data['content'], user_id=current_user.id, title=data['title'])
     db.session.add(new_blog)
     db.session.commit()
     return jsonify(success=True)

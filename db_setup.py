@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS blogs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     content TEXT NOT NULL,
+    title TEXT NOT NULL,
     FOREIGN KEY (username) REFERENCES users (username)
 )
 ''')
