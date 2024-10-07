@@ -18,11 +18,11 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return redirect(url_for('map_page'))
+    return redirect(url_for('introduction_page'))
 
-@app.route('/introduction')
+@app.route('/about')
 def introduction_page():
-    return render_template('introduction.html')
+    return render_template('about.html')
 
 # Logout route
 @app.route('/logout', methods=['POST'])
